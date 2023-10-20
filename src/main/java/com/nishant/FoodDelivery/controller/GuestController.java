@@ -1,11 +1,12 @@
 package com.nishant.FoodDelivery.controller;
 
 
+import com.nishant.FoodDelivery.model.Customer;
+import com.nishant.FoodDelivery.model.dto.CustomerSignUpDTO;
 import com.nishant.FoodDelivery.service.GuestService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("guest")
@@ -16,6 +17,11 @@ public class GuestController {
     /*
     POST
      */
+
+    @PostMapping("customer")
+    public String registerCustomer(@RequestBody @Valid CustomerSignUpDTO customerSignUpDTO){
+        return service.registerCustomer(customerSignUpDTO);
+    }
 
     /*
     GET
