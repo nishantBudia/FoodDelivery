@@ -4,14 +4,17 @@ import com.nishant.FoodDelivery.token.service.TokenBlacklistService;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
 
 public class JWTBlacklistFilter implements Filter {
 
-    @Autowired
-    TokenBlacklistService tokenBlacklistService;
+    private final TokenBlacklistService tokenBlacklistService;
+
+    public JWTBlacklistFilter(TokenBlacklistService tokenBlacklistService) {
+        this.tokenBlacklistService = tokenBlacklistService;
+    }
+
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {

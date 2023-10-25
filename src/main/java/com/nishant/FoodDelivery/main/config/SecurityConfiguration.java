@@ -11,6 +11,8 @@ import com.nishant.FoodDelivery.main.service.AdminService;
 import com.nishant.FoodDelivery.main.util.RSAKeyProperties;
 import com.nishant.FoodDelivery.main.service.CustomerService;
 import com.nishant.FoodDelivery.main.util.JWTBlacklistFilter;
+import com.nishant.FoodDelivery.token.service.TokenBlacklistService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -42,11 +44,14 @@ public class SecurityConfiguration {
         this.keys = keys;
     }
 
+    @Autowired
+    TokenBlacklistService tokenBlacklistService;
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
-                .addFilterBefore(new JWTBlacklistFilter(), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JWTBlacklistFilter(tokenBlacklistService), UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(auth->{
                     auth.requestMatchers("/guest/**").permitAll();
                     auth.requestMatchers(
