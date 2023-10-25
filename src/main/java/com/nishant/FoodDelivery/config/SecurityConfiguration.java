@@ -55,7 +55,7 @@ public class SecurityConfiguration {
                             "/swagger-ui/**",
                             "/v2/api-docs/**",
                             "/swagger-resources/**").permitAll();
-                    auth.requestMatchers("/customer/**").hasAnyRole("ADMIN","CUSTOMER");
+                    auth.requestMatchers("/customer/**").hasAnyRole("CUSTOMER");
                     auth.requestMatchers("/admin/**").hasRole("ADMIN");
                     auth.anyRequest().authenticated();
                 })
@@ -92,7 +92,6 @@ public class SecurityConfiguration {
         DaoAuthenticationProvider customerAuthProvider = new DaoAuthenticationProvider();
         customerAuthProvider.setUserDetailsService((UserDetailsService) customerService);
         customerAuthProvider.setPasswordEncoder(passwordEncoder());
-
 
         DaoAuthenticationProvider adminAuthProvider = new DaoAuthenticationProvider();
         adminAuthProvider.setUserDetailsService((UserDetailsService) adminService);
