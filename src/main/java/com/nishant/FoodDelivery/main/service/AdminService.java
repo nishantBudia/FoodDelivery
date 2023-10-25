@@ -26,17 +26,12 @@ public class AdminService implements UserDetailsService {
         return adminRepo.findByUsername(username).orElseThrow(()->new UsernameNotFoundException("username not found"));
     }
 
-    public String signoutAdmin(String token) {
+    public String logoutAdmin(String token) {
 
         token = token.substring("Bearer ".length());
 
-        try {
-            return HttpRequestUtil
-                    .postRequest(
-                            Optional.of(new TokenDTO(token,tokenService.getTokenExpiryDate(token))),
-                            "http://"+System.getenv("TOKEN_BLACKLIST_SERVER_URL"));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        tokenService.blacklistToken(token);
+
+        return "Success";
     }
 }
