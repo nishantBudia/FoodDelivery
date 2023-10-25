@@ -1,0 +1,12 @@
+spring:
+    datasource:
+        main:
+            driverClassName: com.mysql.cj.jdbc.Driver
+            jdbcUrl: jdbc:mysql:${FOOD_DELIVERY_DATABASE_URL}
+            password: ${MYSQL_PASSWORD}
+            username: ${MYSQL_USERNAME}
+        token:
+            driverClassName: org.hsqldb.jdbc.JDBCDriver
+            jdbcUrl: jdbc:hsqldb:mem:token_blacklist;DB_CLOSE_DELAY=-1
+            password: ${MYSQL_PASSWORD}
+            username: ${MYSQL_USERNAME}
