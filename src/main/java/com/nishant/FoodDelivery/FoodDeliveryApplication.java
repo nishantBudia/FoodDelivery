@@ -1,10 +1,10 @@
 package com.nishant.FoodDelivery;
 
-import com.nishant.FoodDelivery.model.Admin;
-import com.nishant.FoodDelivery.model.Role;
-import com.nishant.FoodDelivery.repo.AdminRepo;
-import com.nishant.FoodDelivery.repo.CustomerRepo;
-import com.nishant.FoodDelivery.repo.RoleRepo;
+import com.nishant.FoodDelivery.main.model.Admin;
+import com.nishant.FoodDelivery.main.model.Role;
+import com.nishant.FoodDelivery.main.repo.AdminRepo;
+import com.nishant.FoodDelivery.main.repo.CustomerRepo;
+import com.nishant.FoodDelivery.main.repo.RoleRepo;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
