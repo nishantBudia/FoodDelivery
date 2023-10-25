@@ -1,7 +1,14 @@
 package com.nishant.FoodDelivery.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JSR310Module;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.nishant.FoodDelivery.model.dto.TokenDTO;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.RequestEntity;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -10,7 +17,9 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.UUID;
 
 public class HttpRequestUtil {
@@ -49,7 +58,7 @@ public class HttpRequestUtil {
         return data.toString();
     }
 
-    public static String postRequest(Object requestBody, String urlString) throws IOException{
+    public static String postRequest(Optional<? extends Object> requestBody, String urlString) throws IOException{
 
 
         URL url = new URL(urlString);
@@ -66,8 +75,14 @@ public class HttpRequestUtil {
 
         ObjectMapper objectMapper = new ObjectMapper();
 
+        objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+
+        objectMapper.registerModule(new JavaTimeModule());
+
+        String body = objectMapper.writeValueAsString(requestBody.get());
+
         try(OutputStream os = con.getOutputStream()) {
-            byte[] input = objectMapper.writeValueAsBytes(requestBody);
+            byte[] input = body.getBytes(StandardCharsets.UTF_8);
             os.write(input, 0, input.length);
         }
 
