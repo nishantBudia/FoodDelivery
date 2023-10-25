@@ -30,29 +30,11 @@ public class JWTBlacklistFilter implements Filter {
 
             String token = request.getHeader("Authorization").substring("Bearer ".length());
 
-            URL url = new URL("http://localhost:8081/token/"+token);
+            String url = "http://"+System.getenv("TOKEN_BLACKLIST_SERVER_URL")+"/"+token;
 
-            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            String response = HttpRequestUtil.getRequest(url);
 
-            Integer responseCode = con.getResponseCode();
-
-            BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-
-            StringBuilder data = new StringBuilder();
-            String readLine = null;
-
-            while((readLine = in.readLine())!= null)
-            {
-                data.append(readLine);
-            }
-
-            try {
-                in.close();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-
-            if (data.toString().equals("true")) {
+            if (response.equals("true")) {
                 ((HttpServletResponse) servletResponse).sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid Authorization");
                 return;
             }
