@@ -59,7 +59,7 @@ public class SecurityConfiguration {
                             "/swagger-ui/**",
                             "/v2/api-docs/**",
                             "/swagger-resources/**").permitAll();
-                    auth.requestMatchers("/customer/**").hasAnyRole("CUSTOMER");
+                    auth.requestMatchers("/customer/**").hasRole("CUSTOMER");
                     auth.requestMatchers("/admin/**").hasRole("ADMIN");
                     auth.anyRequest().denyAll();
                 })
@@ -120,8 +120,4 @@ public class SecurityConfiguration {
         return jwtAuthenticationConverter;
     }
 
-    @Bean
-    public HashSet<String> invalidTokens(){
-        return new HashSet<>();
-    }
 }
