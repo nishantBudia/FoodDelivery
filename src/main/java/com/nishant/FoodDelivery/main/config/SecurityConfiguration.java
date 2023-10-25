@@ -53,7 +53,7 @@ public class SecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 .addFilterBefore(new JWTBlacklistFilter(tokenBlacklistService), UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(auth->{
-                    auth.requestMatchers("/guest/**").permitAll();
+                    auth.requestMatchers("/guest/**").anonymous();
                     auth.requestMatchers(
                             "/v3/api-docs/**",
                             "/swagger-ui/**",
@@ -61,7 +61,7 @@ public class SecurityConfiguration {
                             "/swagger-resources/**").permitAll();
                     auth.requestMatchers("/customer/**").hasAnyRole("CUSTOMER");
                     auth.requestMatchers("/admin/**").hasRole("ADMIN");
-                    auth.anyRequest().authenticated();
+                    auth.anyRequest().denyAll();
                 })
                 .oauth2ResourceServer((oauth2)->oauth2
                         .jwt(jwtConfigurer -> jwtConfigurer
