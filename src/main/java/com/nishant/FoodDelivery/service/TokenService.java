@@ -50,4 +50,9 @@ public class TokenService {
         Jwt jwt = jwtDecoder.decode(token);
         return jwt.getSubject();
     }
+
+    public Instant getTokenExpiryDate(String token){
+        Jwt jwt = jwtDecoder.decode(token);
+        return jwt.getExpiresAt();
+    }
 }
