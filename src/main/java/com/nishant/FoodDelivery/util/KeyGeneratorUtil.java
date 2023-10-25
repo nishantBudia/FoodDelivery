@@ -3,7 +3,7 @@ package com.nishant.FoodDelivery.util;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 
-public class KeyGeneratorUtility {
+public class KeyGeneratorUtil {
 
     public static KeyPair generateRSAKey(){
         KeyPair keyPair;
