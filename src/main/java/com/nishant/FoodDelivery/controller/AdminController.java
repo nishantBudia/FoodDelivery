@@ -1,22 +1,26 @@
 package com.nishant.FoodDelivery.controller;
 
 import com.nishant.FoodDelivery.repo.AdminRepo;
+import com.nishant.FoodDelivery.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("admin")
 public class AdminController {
     @Autowired
-    AdminRepo adminRepo;
+    AdminService adminService;
 
 
 
     /*
     POST
      */
+
+    @PostMapping("sign-out")
+    public String signoutAdmin(@RequestHeader(name = "Authorization") String token){
+        return adminService.signoutAdmin(token);
+    }
 
     /*
     GET

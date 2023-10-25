@@ -20,6 +20,11 @@ public class CustomerController {
     POST
      */
 
+    @PostMapping("sign-out")
+    public String signoutCustomer(@RequestHeader(name = "Authorization") String token){
+        return customerService.signoutCustomer(token);
+    }
+
     /*
     GET
      */
