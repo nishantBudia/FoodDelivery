@@ -1,12 +1,17 @@
 package com.nishant.FoodDelivery.main.util;
 
+import com.nishant.FoodDelivery.token.service.TokenBlacklistService;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
 
 public class JWTBlacklistFilter implements Filter {
+
+    @Autowired
+    TokenBlacklistService tokenBlacklistService;
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
@@ -18,11 +23,9 @@ public class JWTBlacklistFilter implements Filter {
 
             String token = request.getHeader("Authorization").substring("Bearer ".length());
 
-            String url = "http://"+System.getenv("TOKEN_BLACKLIST_SERVER_URL")+"/"+token;
+            boolean isBlacklisted = tokenBlacklistService.isPresent(token);
 
-            String response = HttpRequestUtil.getRequest(url);
-
-            if (response.equals("true")) {
+            if (isBlacklisted) {
                 ((HttpServletResponse) servletResponse).sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid Authorization");
                 return;
             }
