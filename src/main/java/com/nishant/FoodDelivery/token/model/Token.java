@@ -1,5 +1,6 @@
 package com.nishant.FoodDelivery.token.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -17,6 +18,7 @@ import java.time.Instant;
 @Table(name = "token_blacklist")
 public class Token {
     @Id
+    @Column(length = 1000)
     private String token;
 
     @NotNull
