@@ -1,5 +1,6 @@
 package com.nishant.FoodDelivery.main.service;
 
+import com.nishant.FoodDelivery.token.service.TokenBlacklistService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -18,6 +19,9 @@ public class TokenService {
 
     @Autowired
     private JwtDecoder jwtDecoder;
+
+    @Autowired
+    private TokenBlacklistService tokenBlacklistService;
 
     public String generateJwt(Authentication auth){
 
@@ -54,5 +58,9 @@ public class TokenService {
     public Instant getTokenExpiryDate(String token){
         Jwt jwt = jwtDecoder.decode(token);
         return jwt.getExpiresAt();
+    }
+
+    public void blacklistToken(String token) {
+        tokenBlacklistService.addToken(token,getTokenExpiryDate(token));
     }
 }
