@@ -18,8 +18,8 @@ public class CustomerController {
      */
 
     @PostMapping("sign-out")
-    public String signoutCustomer(@RequestHeader(name = "Authorization") String token){
-        return customerService.signoutCustomer(token);
+    public String logoutCustomer(@RequestHeader(name = "Authorization") String token){
+        return customerService.logoutCustomer(token);
     }
 
     /*

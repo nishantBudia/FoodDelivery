@@ -17,8 +17,8 @@ public class AdminController {
      */
 
     @PostMapping("sign-out")
-    public String signoutAdmin(@RequestHeader(name = "Authorization") String token){
-        return adminService.signoutAdmin(token);
+    public String logoutAdmin(@RequestHeader(name = "Authorization") String token){
+        return adminService.logoutAdmin(token);
     }
 
     /*
