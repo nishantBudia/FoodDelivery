@@ -1,9 +1,13 @@
 package com.nishant.FoodDelivery.main.service;
 
+import com.nishant.FoodDelivery.main.model.dto.RestaurantOwnerRegistrationDTO;
 import com.nishant.FoodDelivery.main.model.user.Customer;
+import com.nishant.FoodDelivery.main.model.user.RestaurantOwner;
 import com.nishant.FoodDelivery.main.model.user.Role;
 import com.nishant.FoodDelivery.main.repo.user.CustomerRepo;
+import com.nishant.FoodDelivery.main.repo.user.RestaurantOwnerRepo;
 import com.nishant.FoodDelivery.main.repo.user.RoleRepo;
+import com.nishant.FoodDelivery.main.util.JWTFunctions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -15,14 +19,14 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
 
 @Service
 public class AuthService {
-
     @Autowired
-    JwtDecoder jwtDecoder;
+    CustomerService customerService;
 
     @Autowired
     CustomerRepo customerRepo;
@@ -42,18 +46,22 @@ public class AuthService {
     @Autowired
     AuthenticationManager authenticationManager;
 
-    public String verifyEmail(String token, String email) {
-        Jwt jwt = jwtDecoder.decode(token);
+    public String verifyCustomerEmail(String token, String email) {
+        Customer customer = (Customer) customerService.loadUserByUsername(email);
 
-        Customer customer = customerRepo.findByUsername(email).orElseThrow(()->new UsernameNotFoundException("username not found"));
-
-        if(!jwt.getSubject().equals(customer.getUsername())){
+        if(!tokenService.getUsernameFromJwt(token).equals(customer.getUsername())
+                ||tokenService.getTokenFunction(token)!= JWTFunctions.VERIFICATION)
+        {
             return "Invalid Authorization";
+        }
+
+        if(tokenService.getTokenExpiryDate(token).compareTo(Instant.now())>0){
+            return "Expired Token";
         }
 
         customer.enable();
 
-        customerRepo.save(customer);
+        customerService.customerRepo.save(customer);
 
         return "Verification success";
     }
@@ -64,7 +72,7 @@ public class AuthService {
         Set<Role> authorities = new HashSet<>();
         authorities.add(roleRepo.findByAuthority("CUSTOMER"));
 
-        Customer customer = customerRepo.save(new Customer(
+        Customer customer = customerService.customerRepo.save(new Customer(
                 email,
                 passwordEncoder.encode(password),
                 authorities));
@@ -100,5 +108,7 @@ public class AuthService {
         }catch (AuthenticationException e){
             return "invalid credentials";
         }
+
     }
+
 }
