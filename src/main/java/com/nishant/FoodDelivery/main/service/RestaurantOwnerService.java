@@ -17,6 +17,6 @@ public class RestaurantOwnerService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        return restaurantOwnerRepo.findByEmail(email).orElseThrow(()->new UsernameNotFoundException("email not found"));
+        return restaurantOwnerRepo.findByUsername(email).orElseThrow(()->new UsernameNotFoundException("email not found"));
     }
 }

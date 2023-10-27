@@ -61,6 +61,7 @@ public class SecurityConfiguration {
                             "/swagger-resources/**").permitAll();
                     auth.requestMatchers("/customer/**").hasRole("CUSTOMER");
                     auth.requestMatchers("/admin/**").hasRole("ADMIN");
+                    auth.requestMatchers("/restaurant-owner/**").hasRole("RESTAURANT_OWNER");
                     auth.anyRequest().authenticated();
                 })
                 .oauth2ResourceServer((oauth2)->oauth2

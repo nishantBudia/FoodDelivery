@@ -11,6 +11,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -22,13 +23,13 @@ public class RestaurantOwner extends User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Email
-    @JoinColumn(unique = true)
-    private String email;
-
     @Size(min = 10, max = 10)
     private String mobileNumber;
 
     @OneToMany
     private List<Restaurant> restaurants;
+
+    public RestaurantOwner(String username, String password, Set<Role> authorities) {
+        super(username, password, authorities);
+    }
 }

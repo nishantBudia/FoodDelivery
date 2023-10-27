@@ -8,6 +8,6 @@ import java.util.Optional;
 
 @Repository
 public interface RestaurantOwnerRepo extends JpaRepository<RestaurantOwner,Long> {
-    Optional<RestaurantOwner> findByEmail(String email);
 
+    Optional<RestaurantOwner> findByUsername(String email);
 }

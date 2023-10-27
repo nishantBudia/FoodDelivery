@@ -1,5 +1,6 @@
 package com.nishant.FoodDelivery.main.service;
 
+import com.nishant.FoodDelivery.main.util.JWTPurposes;
 import com.nishant.FoodDelivery.token.service.TokenBlacklistService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -8,7 +9,6 @@ import org.springframework.security.oauth2.jwt.*;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.stream.Collectors;
 
@@ -23,7 +23,7 @@ public class TokenService {
     @Autowired
     private TokenBlacklistService tokenBlacklistService;
 
-    public String generateJwt(Authentication auth, String email){
+    public String generateJwt(Authentication auth){
 
         String scope = auth.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
@@ -33,8 +33,9 @@ public class TokenService {
                 .issuer("self")
                 .issuedAt((Instant.now()))
                 .expiresAt(Instant.now().plus(30, ChronoUnit.DAYS))
-                .subject(email)
+                .subject(auth.getName())
                 .claim("roles",scope)
+                .claim("purpose", JWTPurposes.AUTHENTICATION)
                 .build();
 
         return jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
@@ -46,6 +47,7 @@ public class TokenService {
                 .issuedAt((Instant.now()))
                 .expiresAt(Instant.now().plus(10, ChronoUnit.MINUTES))
                 .subject(username)
+                .claim("purpose", JWTPurposes.VERIFICATION)
                 .build();
         return jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
     }
@@ -62,5 +64,9 @@ public class TokenService {
 
     public void blacklistToken(String token) {
         tokenBlacklistService.addToken(token,getTokenExpiryDate(token));
+    }
+
+    public JWTPurposes getTokenFunction(String token){
+        return jwtDecoder.decode(token).getClaim("purpose");
     }
 }
