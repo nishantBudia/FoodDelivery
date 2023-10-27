@@ -29,7 +29,7 @@ public class AuthService {
     CustomerService customerService;
 
     @Autowired
-    CustomerRepo customerRepo;
+    RestaurantOwnerService restaurantOwnerService;
 
     @Autowired
     RoleRepo roleRepo;
@@ -66,6 +66,26 @@ public class AuthService {
         return "Verification success";
     }
 
+    public String verifyRestaurantOwnerEmail(String token, String email) {
+        RestaurantOwner restaurantOwner = (RestaurantOwner) restaurantOwnerService.loadUserByUsername(email);
+
+        if(!tokenService.getUsernameFromJwt(token).equals(restaurantOwner.getUsername())
+                ||tokenService.getTokenFunction(token)!= JWTFunctions.VERIFICATION)
+        {
+            return "Invalid Authorization";
+        }
+
+        if(tokenService.getTokenExpiryDate(token).compareTo(Instant.now())>0){
+            return "Expired Token";
+        }
+
+        restaurantOwner.enable();
+
+        restaurantOwnerService.restaurantOwnerRepo.save(restaurantOwner);
+
+        return "Verification success";
+    }
+
 
     public String registerCustomer(String email, String password) {
 
@@ -84,27 +104,27 @@ public class AuthService {
         return "Success";
     }
 
-    public String loginCustomer(String email, String password) {
+    public String registerRestaurantOwner(String email, String password) {
+        Set<Role> authorities = new HashSet<>();
+        authorities.add(roleRepo.findByAuthority("CUSTOMER"));
 
-        try{
-            Authentication auth = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(email,password)
-            );
+        RestaurantOwner restaurantOwner = restaurantOwnerService.restaurantOwnerRepo.save(
+                new RestaurantOwner(email,password,authorities));
 
-            return tokenService.generateJwt(auth,email);
-        }catch (AuthenticationException e){
-            return "invalid credentials";
-        }
+        String token = tokenService.generateJwt(restaurantOwner.getUsername());
 
+        mailingService.sendVerificationEmail(email,token);
+
+        return "Success";
     }
 
-    public String loginAdmin(String username, String password) {
+    public String login(String username, String password) {
+
         try{
             Authentication auth = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(username,password)
             );
-
-            return tokenService.generateJwt(auth,username);
+            return tokenService.generateJwt(auth);
         }catch (AuthenticationException e){
             return "invalid credentials";
         }
