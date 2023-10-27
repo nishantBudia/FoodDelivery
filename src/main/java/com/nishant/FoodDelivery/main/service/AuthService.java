@@ -93,21 +93,25 @@ public class AuthService {
 
         String token = tokenService.generateJwt(customer.getUsername());
 
-        mailingService.sendVerificationEmail(email,token);
+        mailingService.sendCustomerVerificationEmail(email,token);
 
         return "Success";
     }
 
     public String registerRestaurantOwner(String email, String password) {
+
         Set<Role> authorities = new HashSet<>();
         authorities.add(roleRepo.findByAuthority("CUSTOMER"));
 
         RestaurantOwner restaurantOwner = restaurantOwnerService.restaurantOwnerRepo.save(
-                new RestaurantOwner(email,password,authorities));
+                new RestaurantOwner(
+                        email,
+                        passwordEncoder.encode(password),
+                        authorities));
 
         String token = tokenService.generateJwt(restaurantOwner.getUsername());
 
-        mailingService.sendVerificationEmail(email,token);
+        mailingService.sendRestaurantOwnerVerificationEmail(email,token);
 
         return "Success";
     }
