@@ -1,5 +1,7 @@
 spring:
+
     datasource:
+
         main:
             driverClassName: com.mysql.cj.jdbc.Driver
             jdbcUrl: jdbc:mysql:${FOOD_DELIVERY_DATABASE_URL}

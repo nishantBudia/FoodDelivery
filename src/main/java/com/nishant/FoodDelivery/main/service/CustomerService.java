@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class CustomerService implements UserDetailsService {
@@ -28,6 +30,12 @@ public class CustomerService implements UserDetailsService {
         return customerRepo.findByUsername(email).orElseThrow(()->new UsernameNotFoundException("username not found"));
     }
 
+    public Customer loadCustomerFromToken(String token){
+        String email = tokenService.getUsernameFromJwt(token.substring("Bearer ".length()));
+
+        return (Customer) loadUserByUsername(email);
+    }
+
     public String logoutCustomer(String token) {
 
         tokenService.blacklistToken(token.substring("Bearer ".length()));
@@ -36,13 +44,9 @@ public class CustomerService implements UserDetailsService {
     }
 
     public String addAddress(String token, Address address) {
-        List<Address> addresses = new ArrayList<>();
-        addresses.add(address);
 
-        String email = tokenService.getUsernameFromJwt(token.substring("Bearer ".length()));
-
-        Customer customer = (Customer) loadUserByUsername(email);
-        customer.setAddresses(addresses);
+        Customer customer = loadCustomerFromToken(token);
+        customer.getAddresses().add(address);
 
         customerRepo.save(customer);
 
@@ -50,9 +54,22 @@ public class CustomerService implements UserDetailsService {
     }
 
     public List<Address> getAllUserAddresses(String token) {
-        return ((Customer)loadUserByUsername(
-                tokenService.getUsernameFromJwt(
-                        token.substring("Bearer ".length()))))
-                .getAddresses();
+        return loadCustomerFromToken(token).getAddresses();
+    }
+
+    public String deleteUserAddresses(String token, Set<Long> addressIds) {
+
+        Customer customer = loadCustomerFromToken(token);
+
+        customer.setAddresses(
+                customer
+                        .getAddresses()
+                        .stream()
+                        .filter(address -> !addressIds.contains(address.getId()))
+                        .collect(Collectors.toList()));
+
+        customerRepo.save(customer);
+
+        return "Success";
     }
 }

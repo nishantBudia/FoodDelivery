@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("customer")
@@ -55,4 +56,11 @@ public class CustomerController {
     /*
     DELETE
      */
+
+    @DeleteMapping("addresses")
+    public String deleteUserAddresses(
+            @RequestHeader(name = "Authorization") String token,
+            @RequestBody Set<Long> addresses){
+        return customerService.deleteUserAddresses(token,addresses);
+    }
 }

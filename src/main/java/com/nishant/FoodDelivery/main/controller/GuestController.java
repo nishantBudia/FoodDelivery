@@ -21,7 +21,7 @@ public class GuestController {
 
     @PostMapping("customer/registration")
     public String registerCustomer(@RequestBody @Valid CustomerSignUpDTO customerSignUpDTO){
-        return authService.registerCustomer(customerSignUpDTO.getUsername(),customerSignUpDTO.getPassword());
+        return authService.registerCustomer(customerSignUpDTO.getEmail(),customerSignUpDTO.getPassword());
     }
 
     @PostMapping("customer/authentication")

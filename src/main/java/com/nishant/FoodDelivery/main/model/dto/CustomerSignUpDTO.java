@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 public class CustomerSignUpDTO {
 
     @Email
-    private String username;
+    private String email;
 
     @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,10}$")
     private String password;

@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -22,10 +23,15 @@ public class Customer extends User {
     @Size(min = 10, max = 10)
     private String mobileNumber;
 
-    @OneToMany(cascade = CascadeType.MERGE)
-    private List<Address> addresses;
+    @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL)
+    private List<Address> addresses = new ArrayList<>();
 
     public Customer(String username, String password, Set<Role> authorities) {
         super(username, password, authorities);
+    }
+
+    public void setAddresses(List<Address> addresses){
+        this.addresses.removeAll(this.addresses);
+        this.addresses.addAll(addresses);
     }
 }

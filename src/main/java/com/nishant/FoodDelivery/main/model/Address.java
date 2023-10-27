@@ -1,5 +1,7 @@
 package com.nishant.FoodDelivery.main.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.nishant.FoodDelivery.main.model.user.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
