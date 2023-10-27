@@ -61,7 +61,7 @@ public class SecurityConfiguration {
                             "/swagger-resources/**").permitAll();
                     auth.requestMatchers("/customer/**").hasRole("CUSTOMER");
                     auth.requestMatchers("/admin/**").hasRole("ADMIN");
-                    auth.anyRequest().denyAll();
+                    auth.anyRequest().authenticated();
                 })
                 .oauth2ResourceServer((oauth2)->oauth2
                         .jwt(jwtConfigurer -> jwtConfigurer

@@ -1,9 +1,13 @@
 package com.nishant.FoodDelivery.main.controller;
 
 
+import com.nishant.FoodDelivery.main.model.Address;
 import com.nishant.FoodDelivery.main.service.CustomerService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("customer")
@@ -22,6 +26,13 @@ public class CustomerController {
         return customerService.logoutCustomer(token);
     }
 
+    @PostMapping("address")
+    public String addAddress(
+            @RequestBody @Valid Address address,
+            @RequestHeader(name = "Authorization") String token){
+        return customerService.addAddress(token, address);
+    }
+
     /*
     GET
      */
@@ -29,6 +40,12 @@ public class CustomerController {
     @GetMapping("filter")
     public String verifyCustomerFilter(){
         return "Customer access level";
+    }
+
+    @GetMapping("addresses")
+    public List<Address> getAddressesForCustomer(
+            @RequestHeader(name = "Authorization") String token){
+        return customerService.getAllUserAddresses(token);
     }
 
     /*

@@ -23,7 +23,7 @@ public class TokenService {
     @Autowired
     private TokenBlacklistService tokenBlacklistService;
 
-    public String generateJwt(Authentication auth){
+    public String generateJwt(Authentication auth, String email){
 
         String scope = auth.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
@@ -33,7 +33,7 @@ public class TokenService {
                 .issuer("self")
                 .issuedAt((Instant.now()))
                 .expiresAt(Instant.now().plus(30, ChronoUnit.DAYS))
-                .subject(auth.getName())
+                .subject(email)
                 .claim("roles",scope)
                 .build();
 

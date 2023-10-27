@@ -1,6 +1,6 @@
-package com.nishant.FoodDelivery.main.repo;
+package com.nishant.FoodDelivery.main.repo.user;
 
-import com.nishant.FoodDelivery.main.model.Admin;
+import com.nishant.FoodDelivery.main.model.user.Admin;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

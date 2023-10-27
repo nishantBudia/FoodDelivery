@@ -1,4 +1,4 @@
-package com.nishant.FoodDelivery.main.model;
+package com.nishant.FoodDelivery.main.model.user;
 
 
 import jakarta.persistence.*;

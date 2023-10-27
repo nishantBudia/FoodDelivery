@@ -1,9 +1,9 @@
 package com.nishant.FoodDelivery.main.service;
 
-import com.nishant.FoodDelivery.main.model.Customer;
-import com.nishant.FoodDelivery.main.model.Role;
-import com.nishant.FoodDelivery.main.repo.CustomerRepo;
-import com.nishant.FoodDelivery.main.repo.RoleRepo;
+import com.nishant.FoodDelivery.main.model.user.Customer;
+import com.nishant.FoodDelivery.main.model.user.Role;
+import com.nishant.FoodDelivery.main.repo.user.CustomerRepo;
+import com.nishant.FoodDelivery.main.repo.user.RoleRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -45,7 +45,7 @@ public class AuthService {
     public String verifyEmail(String token, String email) {
         Jwt jwt = jwtDecoder.decode(token);
 
-        Customer customer = customerRepo.findByEmail(email).orElseThrow(()->new UsernameNotFoundException("username not found"));
+        Customer customer = customerRepo.findByUsername(email).orElseThrow(()->new UsernameNotFoundException("username not found"));
 
         if(!jwt.getSubject().equals(customer.getUsername())){
             return "Invalid Authorization";
@@ -59,16 +59,15 @@ public class AuthService {
     }
 
 
-    public String registerCustomer(String email, String username, String password) {
+    public String registerCustomer(String email, String password) {
 
         Set<Role> authorities = new HashSet<>();
         authorities.add(roleRepo.findByAuthority("CUSTOMER"));
 
         Customer customer = customerRepo.save(new Customer(
-                username,
+                email,
                 passwordEncoder.encode(password),
-                authorities,
-                email));
+                authorities));
 
         String token = tokenService.generateJwt(customer.getUsername());
 
@@ -84,7 +83,7 @@ public class AuthService {
                     new UsernamePasswordAuthenticationToken(email,password)
             );
 
-            return tokenService.generateJwt(auth);
+            return tokenService.generateJwt(auth,email);
         }catch (AuthenticationException e){
             return "invalid credentials";
         }
@@ -97,7 +96,7 @@ public class AuthService {
                     new UsernamePasswordAuthenticationToken(username,password)
             );
 
-            return tokenService.generateJwt(auth);
+            return tokenService.generateJwt(auth,username);
         }catch (AuthenticationException e){
             return "invalid credentials";
         }

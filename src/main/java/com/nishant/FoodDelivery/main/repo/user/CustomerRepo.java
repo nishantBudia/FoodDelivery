@@ -1,12 +1,10 @@
-package com.nishant.FoodDelivery.main.repo;
+package com.nishant.FoodDelivery.main.repo.user;
 
-import com.nishant.FoodDelivery.main.model.Customer;
+import com.nishant.FoodDelivery.main.model.user.Customer;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
 public interface CustomerRepo extends JpaRepository<Customer,Long> {
-    Optional<Customer> findByEmail(String email);
-
     Optional<Customer> findByUsername(String username);
 }

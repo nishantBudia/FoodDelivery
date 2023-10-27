@@ -23,7 +23,7 @@ public class MailingService {
             message.setFrom(sender);
             message.setSubject("Verify Account");
             message.setTo(recipient);
-            message.setText(MailingUtil.getEmailMessage(host,recipient,token));
+            message.setText(MailingUtil.getCustomerVerificationEmailMessage(host,recipient,token));
 
             mailSender.send(message);
         }catch (Exception e){

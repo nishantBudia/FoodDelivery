@@ -1,16 +1,17 @@
 package com.nishant.FoodDelivery.main.service;
 
-import com.nishant.FoodDelivery.main.util.HttpRequestUtil;
-import com.nishant.FoodDelivery.main.model.dto.TokenDTO;
-import com.nishant.FoodDelivery.main.repo.CustomerRepo;
+import com.nishant.FoodDelivery.main.model.Address;
+import com.nishant.FoodDelivery.main.model.user.Customer;
+import com.nishant.FoodDelivery.main.repo.AddressRepo;
+import com.nishant.FoodDelivery.main.repo.user.CustomerRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
-import java.util.Optional;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class CustomerService implements UserDetailsService {
@@ -19,17 +20,39 @@ public class CustomerService implements UserDetailsService {
     @Autowired
     TokenService tokenService;
 
+    @Autowired
+    AddressRepo addressRepo;
+
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        return customerRepo.findByEmail(email).orElseThrow(()->new UsernameNotFoundException("username not found"));
+        return customerRepo.findByUsername(email).orElseThrow(()->new UsernameNotFoundException("username not found"));
     }
 
     public String logoutCustomer(String token) {
 
-        token = token.substring("Bearer ".length());
-
-        tokenService.blacklistToken(token);
+        tokenService.blacklistToken(token.substring("Bearer ".length()));
 
         return "Success";
+    }
+
+    public String addAddress(String token, Address address) {
+        List<Address> addresses = new ArrayList<>();
+        addresses.add(address);
+
+        String email = tokenService.getUsernameFromJwt(token.substring("Bearer ".length()));
+
+        Customer customer = (Customer) loadUserByUsername(email);
+        customer.setAddresses(addresses);
+
+        customerRepo.save(customer);
+
+        return "Success";
+    }
+
+    public List<Address> getAllUserAddresses(String token) {
+        return ((Customer)loadUserByUsername(
+                tokenService.getUsernameFromJwt(
+                        token.substring("Bearer ".length()))))
+                .getAddresses();
     }
 }

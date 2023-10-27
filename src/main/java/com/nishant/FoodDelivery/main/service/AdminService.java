@@ -1,16 +1,11 @@
 package com.nishant.FoodDelivery.main.service;
 
-import com.nishant.FoodDelivery.main.model.dto.TokenDTO;
-import com.nishant.FoodDelivery.main.repo.AdminRepo;
-import com.nishant.FoodDelivery.main.util.HttpRequestUtil;
+import com.nishant.FoodDelivery.main.repo.user.AdminRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-
-import java.io.IOException;
-import java.util.Optional;
 
 
 @Service

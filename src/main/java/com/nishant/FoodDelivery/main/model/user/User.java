@@ -1,4 +1,4 @@
-package com.nishant.FoodDelivery.main.model;
+package com.nishant.FoodDelivery.main.model.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -15,6 +15,7 @@ import java.util.Set;
 @MappedSuperclass
 public class User implements UserDetails {
 
+    @Column(unique = true)
     private String username;
     private String password;
     private Boolean enabled;

@@ -1,5 +1,6 @@
-package com.nishant.FoodDelivery.main.model;
+package com.nishant.FoodDelivery.main.model.user;
 
+import com.nishant.FoodDelivery.main.model.Address;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;
@@ -18,18 +19,13 @@ public class Customer extends User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Email
-    @JoinColumn(unique = true)
-    private String email;
-
     @Size(min = 10, max = 10)
     private String mobileNumber;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.MERGE)
     private List<Address> addresses;
 
-    public Customer(String username, String password, Set<Role> authorities, String email) {
+    public Customer(String username, String password, Set<Role> authorities) {
         super(username, password, authorities);
-        this.email = email;
     }
 }
