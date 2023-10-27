@@ -1,22 +1,16 @@
 package com.nishant.FoodDelivery.main.service;
 
-import com.nishant.FoodDelivery.main.model.dto.RestaurantOwnerRegistrationDTO;
 import com.nishant.FoodDelivery.main.model.user.Customer;
 import com.nishant.FoodDelivery.main.model.user.RestaurantOwner;
 import com.nishant.FoodDelivery.main.model.user.Role;
-import com.nishant.FoodDelivery.main.repo.user.CustomerRepo;
-import com.nishant.FoodDelivery.main.repo.user.RestaurantOwnerRepo;
 import com.nishant.FoodDelivery.main.repo.user.RoleRepo;
-import com.nishant.FoodDelivery.main.util.JWTFunctions;
+import com.nishant.FoodDelivery.main.util.JWTPurposes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -50,7 +44,7 @@ public class AuthService {
         Customer customer = (Customer) customerService.loadUserByUsername(email);
 
         if(!tokenService.getUsernameFromJwt(token).equals(customer.getUsername())
-                ||tokenService.getTokenFunction(token)!= JWTFunctions.VERIFICATION)
+                ||tokenService.getTokenFunction(token)!= JWTPurposes.VERIFICATION)
         {
             return "Invalid Authorization";
         }
@@ -70,7 +64,7 @@ public class AuthService {
         RestaurantOwner restaurantOwner = (RestaurantOwner) restaurantOwnerService.loadUserByUsername(email);
 
         if(!tokenService.getUsernameFromJwt(token).equals(restaurantOwner.getUsername())
-                ||tokenService.getTokenFunction(token)!= JWTFunctions.VERIFICATION)
+                ||tokenService.getTokenFunction(token)!= JWTPurposes.VERIFICATION)
         {
             return "Invalid Authorization";
         }
