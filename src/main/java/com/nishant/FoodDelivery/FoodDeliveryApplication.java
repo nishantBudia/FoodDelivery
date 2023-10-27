@@ -27,6 +27,7 @@ public class FoodDeliveryApplication {
 		return args -> {
 			Role adminRole = roleRepo.save(new Role("ADMIN"));
 			roleRepo.save(new Role("CUSTOMER"));
+			roleRepo.save(new Role("RESTAURANT_OWNER"));
 
 			Set<Role> roles = new HashSet<>();
 			roles.add(adminRole);
