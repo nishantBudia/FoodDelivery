@@ -1,11 +1,14 @@
 package com.nishant.FoodDelivery.main.service;
 
+import com.nishant.FoodDelivery.main.model.food.FoodCategory;
 import com.nishant.FoodDelivery.main.repo.user.AdminRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 
 @Service
@@ -15,6 +18,9 @@ public class AdminService implements UserDetailsService {
 
     @Autowired
     TokenService tokenService;
+
+    @Autowired
+    FoodCategoryService
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -28,5 +34,8 @@ public class AdminService implements UserDetailsService {
         tokenService.blacklistToken(token);
 
         return "Success";
+    }
+
+    public List<FoodCategory> addFoodCategories(List<FoodCategory> foodCategories) {
     }
 }
